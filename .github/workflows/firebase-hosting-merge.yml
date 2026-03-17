@@ -18,6 +18,11 @@ jobs:
            channel: stable
  
       - run: flutter build web --release
+      # 5️⃣ Add version hash to index.html to force browser refresh
+      - name: Add Version Hash for Cache Busting
+        run: |
+         COMMIT_HASH=$(git rev-parse --short HEAD)
+         sed -i "s|</body>|<script>window.appVersion='${COMMIT_HASH}';</script></body>|" build/web/index.html    
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
